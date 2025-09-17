@@ -1,0 +1,59 @@
+CREATE SCHEMA IF NOT EXISTS lab1;
+SET search_path TO lab1;
+
+
+CREATE TABLE IF NOT EXISTS StudentClub (
+  StudentID INT PRIMARY KEY,
+  Name VARCHAR(100),
+  Major VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS Faculty (
+  FacultyID INT PRIMARY KEY,
+  Name VARCHAR(100),
+  Department VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS Club (
+  ClubID INT PRIMARY KEY,
+  ClubName VARCHAR(100),
+  Budget DECIMAL(12,2),
+  AdvisorID INT REFERENCES Faculty(FacultyID)
+);
+
+CREATE TABLE IF NOT EXISTS Membership (
+  StudentID INT REFERENCES StudentClub(StudentID),
+  ClubID INT REFERENCES Club(ClubID),
+  JoinDate DATE,
+  Role VARCHAR(50),
+  PRIMARY KEY (StudentID, ClubID)
+);
+
+CREATE TABLE IF NOT EXISTS RoomClub (
+  RoomID INT PRIMARY KEY,
+  Location VARCHAR(100),
+  Capacity INT
+);
+
+CREATE TABLE IF NOT EXISTS Event (
+  EventID INT PRIMARY KEY,
+  ClubID INT REFERENCES Club(ClubID),
+  Title VARCHAR(100),
+  EventDate DATE,
+  RoomID INT REFERENCES RoomClub(RoomID)
+);
+
+CREATE TABLE IF NOT EXISTS Attendance (
+  StudentID INT REFERENCES StudentClub(StudentID),
+  EventID INT REFERENCES Event(EventID),
+  Status VARCHAR(20),
+  PRIMARY KEY (StudentID, EventID)
+);
+
+CREATE TABLE IF NOT EXISTS Expense (
+  ExpenseID INT PRIMARY KEY,
+  ClubID INT REFERENCES Club(ClubID),
+  Amount DECIMAL(10,2),
+  Purpose VARCHAR(200),
+  ExpenseDate DATE
+);
